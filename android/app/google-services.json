@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "424707118956",
+    "project_id": "dostoyevsky-22b1b",
+    "storage_bucket": "dostoyevsky-22b1b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424707118956:android:9594796c90a6a8c1f00549",
+        "android_client_info": {
+          "package_name": "com.example.dostoyevsky"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYPV6f1MQJuPRQ_sWWpVIb7-l0WzLfEts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424707118956:android:58fc352f90c82147f00549",
+        "android_client_info": {
+          "package_name": "com.example.sign_up"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYPV6f1MQJuPRQ_sWWpVIb7-l0WzLfEts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

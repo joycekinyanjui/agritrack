@@ -1,0 +1,2 @@
+E:/bwoken/android/app/.cxx/Debug/585d4m1p/arm64-v8a/CMakeFiles/edit_cache.dir
+E:/bwoken/android/app/.cxx/Debug/585d4m1p/arm64-v8a/CMakeFiles/rebuild_cache.dir

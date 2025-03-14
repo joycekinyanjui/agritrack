@@ -1,0 +1,132 @@
+import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'dart:async'; // Import for async operations
+
+class SoilHealthScreen extends StatefulWidget {
+  @override
+  _SoilHealthScreenState createState() => _SoilHealthScreenState();
+}
+
+class _SoilHealthScreenState extends State<SoilHealthScreen> {
+  late Future<Map<String, String>> soilData;
+
+  @override
+  void initState() {
+    super.initState();
+    soilData = fetchSoilHealthData();
+  }
+
+  Future<Map<String, String>> fetchSoilHealthData() async {
+    // Simulating an API call delay
+    await Future.delayed(Duration(seconds: 2));
+
+    // Replace this with actual API call to fetch data based on location
+    return {
+      "Moisture": "45%",
+      "pH Level": "6.5",
+      "Nitrogen": "80 ppm",
+      "Phosphorus": "50 ppm",
+      "Potassium": "70 ppm"
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Soil Health"),
+        backgroundColor: Colors.green[700],
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Soil Condition", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+
+            // Use FutureBuilder to handle async data
+            FutureBuilder<Map<String, String>>(
+              future: soilData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text("Error loading data");
+                } else {
+                  final data = snapshot.data!;
+                  return Column(
+                    children: [
+                      SoilParameterCard("Moisture", data["Moisture"]!, Icons.water_drop, Colors.blue),
+                      SoilParameterCard("pH Level", data["pH Level"]!, Icons.science, Colors.orange),
+                      SoilParameterCard("Nitrogen", data["Nitrogen"]!, Icons.eco, Colors.green),
+                      SoilParameterCard("Phosphorus", data["Phosphorus"]!, Icons.agriculture, Colors.brown),
+                      SoilParameterCard("Potassium", data["Potassium"]!, Icons.grass, Colors.purple),
+                    ],
+                  );
+                }
+              },
+            ),
+
+            SizedBox(height: 20),
+            Text("Soil Health Trends", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Expanded(child: SoilHealthChart()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SoilParameterCard extends StatelessWidget {
+  final String parameter;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  SoilParameterCard(this.parameter, this.value, this.icon, this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        leading: Icon(icon, color: color, size: 30),
+        title: Text(parameter, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        trailing: Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+      ),
+    );
+  }
+}
+
+class SoilHealthChart extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(show: false),
+        borderData: FlBorderData(show: false),
+        lineBarsData: [
+          LineChartBarData(
+            spots: [
+              FlSpot(0, 30),
+              FlSpot(1, 40),
+              FlSpot(2, 35),
+              FlSpot(3, 50),
+              FlSpot(4, 45),
+            ],
+            isCurved: true,
+            gradient: LinearGradient(
+              colors: [Colors.green, Colors.lightGreen], // ✅ Fixed here
+            ),
+            barWidth: 3,
+            isStrokeCapRound: true,
+            belowBarData: BarAreaData(show: false),
+          ),
+        ],
+      ),
+    );
+  }
+}

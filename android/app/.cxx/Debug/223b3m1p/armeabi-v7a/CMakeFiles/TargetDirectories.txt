@@ -1,0 +1,2 @@
+E:/bwoken/android/app/.cxx/Debug/223b3m1p/armeabi-v7a/CMakeFiles/edit_cache.dir
+E:/bwoken/android/app/.cxx/Debug/223b3m1p/armeabi-v7a/CMakeFiles/rebuild_cache.dir
