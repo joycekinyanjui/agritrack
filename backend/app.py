@@ -23,6 +23,15 @@ try:
 except Exception as e:
     print(f"❌ Error loading model: {e}")
 
+# Define crop mapping dictionary
+crop_dict = {
+    1: 'rice', 2: 'maize', 3: 'jute', 4: 'cotton', 5: 'coconut',
+    6: 'papaya', 7: 'orange', 8: 'apple', 9: 'muskmelon', 10: 'watermelon',
+    11: 'grapes', 12: 'mango', 13: 'banana', 14: 'pomegranate', 15: 'lentil',
+    16: 'blackgram', 17: 'mungbean', 18: 'mothbeans', 19: 'pigeonpeas',
+    20: 'kidneybeans', 21: 'chickpea', 22: 'coffee'
+}
+
 # Define Home Route to Check If API is Running
 @app.route('/')
 def home():
@@ -54,51 +63,20 @@ def predict():
         input_scaled = scaler.transform(mx_features)  # StandardScaler
 
         # Predict the crop
-        # Define the correct mapping of numeric labels to crop names
-        crop_dict={
-
-    'rice':1 ,
-    'maize':2   ,
-    'jute':3     ,
-    'cotton':4    ,
-    'coconut':5     ,
-    'papaya':6      ,
-    'orange':7     ,
-    'apple' :8     ,
-    'muskmelon':9   ,
-    'watermelon':10,
-    'grapes' :11,
-    'mango' :12,
-    'banana': 13    ,
-    'pomegranate':14 ,
-    'lentil' :15    ,
-    'blackgram':16   ,
-    'mungbean':17  ,
-    'mothbeans':18  ,
-    'pigeonpeas':19 ,
-    'kidneybeans':20  ,
-    'chickpea':21     ,
-    'coffee':22,
-
-}
-
-# Predict the crop (returns a number)
-        prediction = model.predict(input_scaled)[0]
+        prediction = model.predict(input_scaled)
         
-        if prediction[0]   in crop_dict:
-            crop = crop_dict[prediction[0]]
-            recommended_crop= "{} is the reccomended crop".format(crop)
-# Convert the prediction number into a crop name
-        else:
-            recommended_crop="no crop found"
-# Return the actual crop name
+        # Ensure prediction is extracted correctly
+        predicted_label = int(prediction.item())
+
+        # Get the recommended crop name
+        recommended_crop = crop_dict.get(predicted_label, "No crop found")
+
+        # Return the actual crop name
         return jsonify({'recommended_crop': recommended_crop})
-# Get the predicted crop index
-       
+    
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))  # Use Render's PORT
     app.run(host="0.0.0.0", port=port, debug=True)
-
