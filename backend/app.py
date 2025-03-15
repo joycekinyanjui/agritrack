@@ -4,8 +4,10 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 # Initialize Flask App
+from flask_cors import CORS
+
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend requests
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Set file paths
 model_path = os.path.join(os.path.dirname(__file__), "model.pkl")
