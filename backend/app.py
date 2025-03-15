@@ -83,11 +83,14 @@ def predict():
 }
 
 # Predict the crop (returns a number)
-        prediction = model.predict(input_scaled)[0]  # Ensure it extracts the single value
-
+        prediction = model.predict(input_scaled)[0]
+        
+        if prediction[0]   in crop_dict:
+            crop = crop_dict[prediction[0]]
+            recommended_crop= "{} is the reccomended crop".format(crop)
 # Convert the prediction number into a crop name
-        recommended_crop = crop_dict.get(int(prediction), "Unknown Crop")  # 🔥 Fix here
-
+        else:
+            recommended_crop="no crop found"
 # Return the actual crop name
         return jsonify({'recommended_crop': recommended_crop})
 # Get the predicted crop index
