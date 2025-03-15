@@ -60,7 +60,7 @@ def predict():
         recommended_crop = prediction  # If using LabelEncoder, map it to a name
 
         # Return response
-        return jsonify({'recommended_crop': recommended_crop})
+        return jsonify({'recommended_crop': str(recommended_crop)})  # Convert to string
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
