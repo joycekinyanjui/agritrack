@@ -54,14 +54,44 @@ def predict():
         input_scaled = scaler.transform(mx_features)  # StandardScaler
 
         # Predict the crop
-        prediction = model.predict(input_scaled)[0]  # Get the predicted crop index
-        
-        # Convert NumPy int64 to Python str before returning
-        recommended_crop = str(prediction)  
-        
-        # Return response
-        return jsonify({'recommended_crop': recommended_crop})
+        # Define the correct mapping of numeric labels to crop names
+        crop_dict={
 
+    'rice':1 ,
+    'maize':2   ,
+    'jute':3     ,
+    'cotton':4    ,
+    'coconut':5     ,
+    'papaya':6      ,
+    'orange':7     ,
+    'apple' :8     ,
+    'muskmelon':9   ,
+    'watermelon':10,
+    'grapes' :11,
+    'mango' :12,
+    'banana': 13    ,
+    'pomegranate':14 ,
+    'lentil' :15    ,
+    'blackgram':16   ,
+    'mungbean':17  ,
+    'mothbeans':18  ,
+    'pigeonpeas':19 ,
+    'kidneybeans':20  ,
+    'chickpea':21     ,
+    'coffee':22,
+
+}
+
+# Predict the crop (returns a number)
+        prediction = model.predict(input_scaled)[0]  # Ensure it extracts the single value
+
+# Convert the prediction number into a crop name
+        recommended_crop = crop_dict.get(int(prediction), "Unknown Crop")  # 🔥 Fix here
+
+# Return the actual crop name
+        return jsonify({'recommended_crop': recommended_crop})
+# Get the predicted crop index
+       
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
