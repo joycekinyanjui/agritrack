@@ -32,34 +32,30 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Ensure the request is in JSON format
         if not request.is_json:
             return jsonify({'error': 'Invalid request format. Must be JSON'}), 400
         
         data = request.get_json()
 
-        # Ensure all required fields are present
         required_fields = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
         if not all(field in data for field in required_fields):
             return jsonify({'error': 'Missing fields in request'}), 400
 
-        # Convert input into DataFrame (ensures correct feature names)
         input_df = pd.DataFrame([[data['N'], data['P'], data['K'], 
                                   data['temperature'], data['humidity'], 
                                   data['ph'], data['rainfall']]], 
                                 columns=required_fields)
 
-        # Preprocess the input using the same scalers
-        mx_features = mx.transform(input_df)  # MinMaxScaler
-        input_scaled = scaler.transform(mx_features)  # StandardScaler
+        # Preprocess input
+        mx_features = mx.transform(input_df)
+        input_scaled = scaler.transform(mx_features)
 
-        # Predict the crop
-        prediction = model.predict(input_scaled)[0]  # Get the predicted crop index
-        
-        # Convert the numeric prediction to a crop name
-        recommended_crop = prediction  # If using LabelEncoder, map it to a name
+        # Get prediction (returns an index)
+        prediction_index = model.predict(input_scaled)[0]  # e.g., 19
 
-        # Return response
+        # ✅ Convert prediction index to crop name
+        recommended_crop = mx.inverse_transform([[prediction_index]])[0][0]  # Convert back to name
+
         return jsonify({'recommended_crop': str(recommended_crop)})  # Convert to string
 
     except Exception as e:
