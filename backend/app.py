@@ -50,8 +50,7 @@ def predict():
                                 columns=required_fields)
 
         # Preprocess the input using the same scalers
-        mx_features = mx.transform(input_df.reshape(1, -1))  # Reshape to (1,7)
-  # MinMaxScaler
+        mx_features = mx.transform(input_df)  # MinMaxScaler
         input_scaled = scaler.transform(mx_features)  # StandardScaler
 
         # Predict the crop
@@ -59,10 +58,9 @@ def predict():
         
         # Convert NumPy int64 to Python str before returning
         recommended_crop = str(prediction)  
-
+        recommended_crop = mx.inverse_transform([[prediction]])[0][0] 
         # Return response
-        return jsonify({'recommended_crop': str(recommended_crop)})  # Convert to string
-
+        return jsonify({'recommended_crop': recommended_crop})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
