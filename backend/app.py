@@ -50,7 +50,8 @@ def predict():
                                 columns=required_fields)
 
         # Preprocess the input using the same scalers
-        mx_features = mx.transform(input_df)  # MinMaxScaler
+        mx_features = mx.transform(input_df.reshape(1, -1))  # Reshape to (1,7)
+  # MinMaxScaler
         input_scaled = scaler.transform(mx_features)  # StandardScaler
 
         # Predict the crop
