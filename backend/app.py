@@ -57,7 +57,6 @@ def predict():
         prediction = model.predict(input_scaled)[0]  # Get the predicted crop index
         
         # Convert NumPy int64 to Python str before returning
-        recommended_crop = str(prediction)  
         recommended_crop = mx.inverse_transform([[prediction]])[0][0] 
         # Return response
         return jsonify({'recommended_crop': recommended_crop})
