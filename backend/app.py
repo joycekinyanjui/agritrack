@@ -47,7 +47,8 @@ def predict():
                                 columns=required_fields)
 
         # Preprocess input
-        mx_features = mx.transform(input_df)
+        mx_features = mx.transform(input_df).reshape(1, -1)  # Reshape to (1,7)
+
         input_scaled = scaler.transform(mx_features)
 
         # Get prediction (returns an index)
