@@ -32,36 +32,41 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
+        # Ensure the request is in JSON format
         if not request.is_json:
             return jsonify({'error': 'Invalid request format. Must be JSON'}), 400
         
         data = request.get_json()
 
+        # Ensure all required fields are present
         required_fields = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
         if not all(field in data for field in required_fields):
             return jsonify({'error': 'Missing fields in request'}), 400
 
+        # Convert input into DataFrame (ensures correct feature names)
         input_df = pd.DataFrame([[data['N'], data['P'], data['K'], 
                                   data['temperature'], data['humidity'], 
                                   data['ph'], data['rainfall']]], 
                                 columns=required_fields)
 
-        # Preprocess input
-        mx_features = mx.transform(input_df).reshape(1, -1)  # Reshape to (1,7)
+        # Preprocess the input using the same scalers
+        mx_features = mx.transform(input_df)  # MinMaxScaler
+        input_scaled = scaler.transform(mx_features)  # StandardScaler
 
-        input_scaled = scaler.transform(mx_features)
+        # Predict the crop
+        prediction = model.predict(input_scaled)[0]  # Get the predicted crop index
+        
+        # Convert NumPy int64 to Python str before returning
+        recommended_crop = str(prediction)  
 
-        # Get prediction (returns an index)
-        prediction_index = model.predict(input_scaled)[0]  # e.g., 19
-
-        # ✅ Convert prediction index to crop name
-        recommended_crop = mx.inverse_transform([[prediction_index]])[0][0]  # Convert back to name
-
+        # Return response
         return jsonify({'recommended_crop': str(recommended_crop)})  # Convert to string
+
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Run Flask App
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))  # Use Render's PORT
+    app.run(host="0.0.0.0", port=port, debug=True)
+
